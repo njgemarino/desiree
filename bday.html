@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ate Det's Birthday Quest 🎮✨</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600;700&family=Satisfy&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      background: #0a0a0a;
+      color: #fff;
+    }
+
+    /* ═══════════════════════════════════════════
+       ANIMATED BACKGROUND
+       ═══════════════════════════════════════════ */
+    
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a0a1f 0%, #0a0a0a 50%, #1f0a1a 100%);
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .constellation {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.3;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    .particle-pink {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #ff1493;
+      border-radius: 50%;
+      animation: floatPink linear infinite;
+      box-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
+    }
+
+    @keyframes floatPink {
+      0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* ═══════════════════════════════════════════
+       MAIN CONTAINER
+       ═══════════════════════════════════════════ */
+
+    .game-container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .game-card {
+      background: rgba(20, 20, 20, 0.95);
+      backdrop-filter: blur(20px);
+      border: 2px solid;
+      border-image: linear-gradient(135deg, #ff1493, #ff69b4, #000) 1;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 
+        0 20px 60px rgba(255, 20, 147, 0.4),
+        0 0 80px rgba(0, 0, 0, 0.8),
+        inset 0 0 40px rgba(255, 20, 147, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff1493, #000, #ff69b4, #000);
+      background-size: 300% 300%;
+      border-radius: 20px;
+      z-index: -1;
+      animation: borderGlow 4s ease infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ═══════════════════════════════════════════
+       PROGRESS BAR
+       ═══════════════════════════════════════════ */
+
+    .progress-container {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 20, 147, 0.3);
+    }
+
+    .progress-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: #ff69b4;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(255, 20, 147, 0.4);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff1493, #ff69b4);
+      width: 0%;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 20px rgba(255, 20, 147, 0.8);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ═══════════════════════════════════════════
+       SCREENS
+       ═══════════════════════════════════════════ */
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Satisfy', cursive;
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #ff1493, #ff69b4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 0 0 40px rgba(255, 20, 147, 0.5);
+      animation: titleGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.5)); }
+      50% { filter: drop-shadow(0 0 25px rgba(255, 20, 147, 0.9)); }
+    }
+
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: #ff69b4;
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ddd;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* ═══════════════════════════════════════════
+       BUTTONS
+       ═══════════════════════════════════════════ */
+
+    .btn {
+      display: inline-block;
+      margin: 15px 10px;
+      padding: 15px 35px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #ff1493, #000);
+      border: 2px solid #ff1493;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(255, 20, 147, 0.4);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 20, 147, 0.6);
+      border-color: #ff69b4;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       QUEST CARDS
+       ═══════════════════════════════════════════ */
+
+    .quest-card {
+      background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(20, 20, 20, 0.9));
+      padding: 25px;
+      border-radius: 15px;
+      border: 2px solid rgba(255, 20, 147, 0.3);
+      margin: 20px 0;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quest-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 20, 147, 0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .quest-card:hover::before {
+      opacity: 1;
+    }
+
+    .quest-card:hover {
+      transform: translateY(-5px);
+      border-color: #ff1493;
+      box-shadow: 0 15px 40px rgba(255, 20, 147, 0.4);
+    }
+
+    .quest-card.completed {
+      border-color: #4ade80;
+      background: linear-gradient(135deg, rgba(30, 50, 30, 0.9), rgba(20, 40, 20, 0.9));
+    }
+
+    .quest-icon {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 10px rgba(255, 20, 147, 0.6));
+    }
+
+    .quest-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      color: #ff69b4;
+      text-align: center;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .quest-desc {
+      font-size: 0.95rem;
+      color: #aaa;
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════
+       MINI GAMES
+       ═══════════════════════════════════════════ */
+
+    .manga-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .manga-card {
+      background: rgba(30, 30, 30, 0.8);
+      border: 2px solid rgba(255, 20, 147, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    .manga-card:hover {
+      transform: scale(1.05);
+      border-color: #ff1493;
+      box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+    }
+
+    .manga-card.selected {
+      border-color: #4ade80;
+      background: rgba(30, 50, 30, 0.8);
+    }
+
+    .choice-container {
+      margin: 20px 0;
+    }
+
+    .choice-btn {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      background: rgba(30, 30, 30, 0.8);
+      border: 2px solid rgba(255, 20, 147, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+    }
+
+    .choice-btn:hover {
+      border-color: #ff1493;
+      background: rgba(40, 40, 40, 0.9);
+      transform: translateX(10px);
+    }
+
+    .choice-btn.correct {
+      border-color: #4ade80;
+      background: rgba(30, 50, 30, 0.9);
+    }
+
+    .choice-btn.wrong {
+      border-color: #ef4444;
+      background: rgba(50, 20, 20, 0.9);
+    }
+
+    /* ═══════════════════════════════════════════
+       JINX CHARACTER
+       ═══════════════════════════════════════════ */
+
+    .jinx-container {
+      text-align: center;
+      margin: 30px 0;
+      position: relative;
+    }
+
+    .jinx-quote {
+      background: rgba(20, 20, 20, 0.9);
+      border-left: 4px solid #ff1493;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      font-style: italic;
+      color: #ff69b4;
+      position: relative;
+    }
+
+    .jinx-quote::before {
+      content: '"';
+      font-size: 3rem;
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      color: #ff1493;
+      opacity: 0.3;
+    }
+
+    /* ═══════════════════════════════════════════
+       AQUARIUS ZODIAC
+       ═══════════════════════════════════════════ */
+
+    .zodiac-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .zodiac-symbol {
+      font-size: 5rem;
+      margin: 20px 0;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* ═══════════════════════════════════════════
+       FINAL CELEBRATION
+       ═══════════════════════════════════════════ */
+
+    .celebration {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #ff1493;
+      position: absolute;
+      animation: confettiFall 3s linear;
+    }
+
+    @keyframes confettiFall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .achievement {
+      background: linear-gradient(135deg, rgba(255, 20, 147, 0.2), rgba(0, 0, 0, 0.5));
+      border: 2px solid #ff1493;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      box-shadow: 0 0 40px rgba(255, 20, 147, 0.4);
+    }
+
+    .trophy {
+      font-size: 5rem;
+      margin: 20px 0;
+      animation: trophySpin 2s ease-in-out infinite;
+    }
+
+    @keyframes trophySpin {
+      0%, 100% { transform: rotateY(0deg) scale(1); }
+      50% { transform: rotateY(180deg) scale(1.1); }
+    }
+
+    /* ═══════════════════════════════════════════
+       FOOTER
+       ═══════════════════════════════════════════ */
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 2px solid rgba(255, 20, 147, 0.3);
+    }
+
+    .footer p {
+      font-size: 0.9rem;
+      color: rgba(255, 182, 193, 0.7);
+      margin: 5px 0;
+    }
+
+    .footer .creator {
+      color: #ff1493;
+      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════
+       UTILITY
+       ═══════════════════════════════════════════ */
+
+    .hidden {
+      display: none;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+       ═══════════════════════════════════════════ */
+
+    @media (max-width: 768px) {
+      .game-card {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+      }
+
+      .manga-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .btn-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ANIMATED BACKGROUND -->
+  <div class="background" id="background">
+    <div class="constellation" id="constellation"></div>
+  </div>
+
+  <!-- GAME CONTAINER -->
+  <div class="game-container">
+    <div class="game-card">
+
+      <!-- PROGRESS BAR -->
+      <div class="progress-container">
+        <div class="progress-label">Birthday Quest Progress: <span id="questCount">0/7</span></div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- SCREEN 1: WELCOME -->
+      <div class="screen active" id="screen-welcome">
+        <h1>Happy 23rd Birthday Ate Say! 🎮✨</h1>
+        <p style="font-size: 1.3rem; margin: 30px 0;">
+          Welcome sa akong kaboang, te say!<br>
+          I-complete ra ang quest then you will see hehe 💕
+        </p>
+        
+        <div class="zodiac-container">
+          <div class="zodiac-symbol">♒</div>
+          <p style="color: #ff69b4; font-weight: 600;"> Desiree | 02-09 </p>
+        </div>
+
+        <button class="btn" onclick="startGame()">Start Your Quest 🚀</button>
+      </div>
+
+      <!-- SCREEN 2: QUEST SELECT -->
+      <div class="screen" id="screen-quests">
+        <h2>Choose Your Quest</h2>
+        <p>Complete all 7 quests to unlock your special surprise!</p>
+
+        <div class="btn-grid">
+          <div class="quest-card" onclick="startQuest('manga')" id="quest-manga">
+            <div class="quest-icon">📚</div>
+            <div class="quest-title">Manga Master</div>
+            <div class="quest-desc">Test your manga knowledge</div>
+          </div>
+
+          <div class="quest-card" onclick="startQuest('jinx')" id="quest-jinx">
+            <div class="quest-icon">💣</div>
+            <div class="quest-title">Jinx's Chaos</div>
+            <div class="quest-desc">Channel your inner Jinx</div>
+          </div>
+
+          <div class="quest-card" onclick="startQuest('fries')" id="quest-fries">
+            <div class="quest-icon">🍟</div>
+            <div class="quest-title">Potato Corner</div>
+            <div class="quest-desc">Flavor matching game</div>
+          </div>
+
+          <div class="quest-card" onclick="startQuest('colors')" id="quest-colors">
+            <div class="quest-icon">🎨</div>
+            <div class="quest-title">Pink & Black</div>
+            <div class="quest-desc">Style your vibe</div>
+          </div>
+
+          <div class="quest-card" onclick="startQuest('learning')" id="quest-learning">
+            <div class="quest-icon">🧠</div>
+            <div class="quest-title">Knowledge Seeker</div>
+            <div class="quest-desc">Discover something new</div>
+          </div>
+
+          <div class="quest-card" onclick="startQuest('movies')" id="quest-movies">
+            <div class="quest-icon">🎬</div>
+            <div class="quest-title">Movie Buff</div>
+            <div class="quest-desc">Guess the movie</div>
+          </div>
+
+          <div class="quest-card" onclick="startQuest('crime')" id="quest-crime">
+            <div class="quest-icon">🔍</div>
+            <div class="quest-title">True Crime</div>
+            <div class="quest-desc">Solve the mystery</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANGA QUEST -->
+      <div class="screen" id="screen-manga">
+        <h2>📚 Manga Master Quest</h2>
+        <p>Pick your top 3 favorite manga genres!</p>
+
+        <div class="manga-grid">
+          <div class="manga-card" onclick="selectManga(this)">
+            <div style="font-size: 2rem;"></div>
+            <p>binayot</p>
+          </div>
+          <div class="manga-card" onclick="selectManga(this)">
+            <div style="font-size: 2rem;"></div>
+            <p>patay-patay</p>
+          </div>
+          <div class="manga-card" onclick="selectManga(this)">
+            <div style="font-size: 2rem;"></div>
+            <p>hadlok-hadlok</p>
+          </div>
+          <div class="manga-card" onclick="selectManga(this)">
+            <div style="font-size: 2rem;"></div>
+            <p>mistiri</p>
+          </div>
+          <div class="manga-card" onclick="selectManga(this)">
+            <div style="font-size: 2rem;"></div>
+            <p>pantasi</p>
+          </div>
+          <div class="manga-card" onclick="selectManga(this)">
+            <div style="font-size: 2rem;"></div>
+            <p>komidi</p>
+          </div>
+        </div>
+
+        <button class="btn" onclick="completeManga()" id="btn-manga" style="display: none;">Complete Quest ✓</button>
+      </div>
+
+      <!-- JINX QUEST -->
+      <div class="screen" id="screen-jinx">
+        <h2>💣 Jinx's Chaos Quest</h2>
+        
+        <div class="jinx-container">
+          <div style="font-size: 8rem; margin: 20px 0;">💙💜</div>
+          <div class="jinx-quote">
+            "I'm crazy! Got a doctor's note!"
+          </div>
+          <p style="color: #ff69b4; margin: 20px 0;">
+            Jinx represents chaos, creativity, and being unapologetically yourself.<br>
+            Just like you, Ate Det! 💕
+          </p>
+        </div>
+
+        <p style="font-weight: 600;">What do you love most about Jinx?</p>
+        <div class="choice-container">
+          <button class="choice-btn" onclick="completeJinx()">Her fearless personality 💪</button>
+          <button class="choice-btn" onclick="completeJinx()">Her creative chaos 🎨</button>
+          <button class="choice-btn" onclick="completeJinx()">Her loyalty to those she loves 💙</button>
+          <button class="choice-btn" onclick="completeJinx()">All of the above! ✨</button>
+        </div>
+      </div>
+
+      <!-- POTATO CORNER QUEST -->
+      <div class="screen" id="screen-fries">
+        <h2>🍟 Potato Corner Quest</h2>
+        <p>imong ampay nga flavor combo</p>
+
+        <div style="margin: 30px 0;">
+          <div style="background: rgba(30,30,30,0.8); padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid rgba(255,20,147,0.3);">
+            <p style="font-weight: 600; color: #ff69b4;">first flavor</p>
+            <div class="choice-container">
+              <button class="choice-btn" onclick="selectFlavor(this, true)">Spicy BBQ 🔥</button>
+              <button class="choice-btn" onclick="selectFlavor(this, false)">ayaw ko pindota maka refresh jud ka</button>
+            </div>
+          </div>
+
+          <div style="background: rgba(30,30,30,0.8); padding: 20px; border-radius: 10px; margin: 15px 0; border: 2px solid rgba(255,20,147,0.3);">
+            <p style="font-weight: 600; color: #ff69b4;">Second</p>
+            <div class="choice-container">
+              <button class="choice-btn" onclick="selectFlavor(this, true)">Sour Cream 💛</button>
+              <button class="choice-btn" onclick="selectFlavor(this, false)">ayaw sad ko pindota kung di ka gusto mubalik sa sugod</button>
+            </div>
+          </div>
+        </div>
+
+         <button class="btn hidden" id="btn-fries" onclick="completeFries()">Complete Quest ✓</button>
+      </div>
+
+      <!-- COLORS QUEST -->
+      <div class="screen" id="screen-colors">
+        <h2>🎨 Pink & Black Quest</h2>
+        <p>imong color</p>
+
+        <div style="margin: 30px 0; text-align: center;">
+          <div style="display: inline-block; margin: 20px;">
+            <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #ff1493, #ff69b4); border-radius: 15px; margin: 10px auto; box-shadow: 0 10px 30px rgba(255,20,147,0.5);"></div>
+            <p style="color: #ff69b4d4; font-weight: 600;">Pink Power</p>
+          </div>
+          <div style="display: inline-block; margin: 20px;">
+            <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #000, #1a1a1a); border-radius: 15px; margin: 10px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px solid #ff1493;"></div>
+            <p style="color: #ff69b4; font-weight: 600;">Black Mystery</p>
+          </div>
+        </div>
+
+        <div class="jinx-quote">
+          Pink represents your soft, loving heart 💕<br>
+          Black represents your strength and mystery 🖤
+        </div>
+
+        <button class="btn" onclick="completeColors()">Perfect Combination ✓</button>
+      </div>
+
+      <!-- LEARNING QUEST -->
+      <div class="screen" id="screen-learning">
+        <h2>🧠 Knowledge Seeker Quest</h2>
+        <p>Here's a fun fact to learn today!</p>
+
+        <div style="background: rgba(30,30,30,0.8); padding: 30px; border-radius: 15px; margin: 30px 0; border: 2px solid #ff1493;">
+          <h3 style="color: #ff69b4; font-size: 1.3rem; margin-bottom: 20px;">Did You Know? 🌟</h3>
+          <p style="text-align: left; font-size: 1rem; line-height: 1.8;">
+            Aquarius (your zodiac sign) is represented by the Water Bearer, symbolizing the sharing of knowledge and humanitarian spirit. Aquarians are known for being innovative, independent thinkers who aren't afraid to be different - just like how you embrace your unique interests! 💫
+            <br><br>
+            Fun science fact: Your brain creates new neural pathways every time you learn something new. By constantly seeking knowledge like you do, you're literally reshaping your brain to become even more amazing! 🧠✨
+          </p>
+        </div>
+
+        <button class="btn" onclick="completeLearning()">Knowledge Unlocked! 🔓</button>
+      </div>
+
+      <!-- MOVIES QUEST -->
+      <div class="screen" id="screen-movies">
+        <h2>🎬 Movie Buff Quest</h2>
+        <p>pindota ra nang naay check</p>
+
+        <div class="choice-container">
+          <div style="background: rgba(30,30,30,0.8); padding: 20px; border-radius: 10px; margin: 15px 0;">
+            <p style="font-style: italic; color: #ff69b4; margin-bottom: 15px;">first genre</p>
+            <button class="choice-btn" onclick="answerMovie(this, false)">Romance</button>
+            <button class="choice-btn" onclick="answerMovie(this, true)">Sci-Fi ✓</button>
+            <button class="choice-btn" onclick="answerMovie(this, false)">Horror</button>
+          </div>
+
+          <div style="background: rgba(30,30,30,0.8); padding: 20px; border-radius: 10px; margin: 15px 0;">
+            <p style="font-style: italic; color: #ff69b4; margin-bottom: 15px;">second genre</p>
+            <button class="choice-btn" onclick="answerMovie(this, true)">Romance ✓</button>
+            <button class="choice-btn" onclick="answerMovie(this, false)">Action</button>
+            <button class="choice-btn" onclick="answerMovie(this, false)">Comedy</button>
+          </div>
+        </div>
+
+        <button class="btn hidden" id="btn-movies" onclick="completeMovies()">Complete Quest ✓</button>
+      </div>
+
+      <!-- CRIME QUEST -->
+      <div class="screen" id="screen-crime">
+        <h2>🔍 True Crime Mystery Quest</h2>
+        <p>Use your detective skills to solve this riddle!</p>
+
+        <div style="background: rgba(30,30,30,0.8); padding: 30px; border-radius: 15px; margin: 30px 0; border: 2px solid #ff1493;">
+          <p style="font-size: 1.1rem; line-height: 1.8; color: #ddd;">
+            A birthday mystery needs solving:<br><br>
+            <em style="color: #ff69b4;">
+              "I have 23 candles that shine so bright,<br>
+              I grow older but my spirit stays light,<br>
+              I love to learn and explore the unknown,<br>
+              With pink and black, my style is shown.<br>
+              Who am I?"
+            </em>
+          </p>
+        </div>
+
+        <div class="choice-container">
+          <button class="choice-btn" onclick="answerCrime(this, false)">A mysterious stranger</button>
+          <button class="choice-btn" onclick="answerCrime(this, true)">The amazing birthday girl - YOU! 🎉</button>
+          <button class="choice-btn" onclick="answerCrime(this, false)">Sherlock Holmes</button>
+        </div>
+
+        <button class="btn hidden" id="btn-crime" onclick="completeCrime()">Mystery Solved! ✓</button>
+      </div>
+
+      <!-- FINAL CELEBRATION -->
+      <div class="screen" id="screen-final">
+        <div class="celebration">
+          <h1>🎉 QUEST COMPLETE! 🎉</h1>
+          
+          <div class="trophy">🏆</div>
+          
+          <div class="achievement">
+            <h2 style="color: #4ade80; margin-bottom: 20px;">Achievement Unlocked!</h2>
+            <p style="font-size: 1.3rem; color: #ff69b4; font-weight: 600;">
+              "The Ultimate Birthday Legend"
+            </p>
+            <p style="margin: 20px 0;">
+              You've completed all 7 quests and proven that you're absolutely amazing! Wow nahuman na jud niya haha!
+            </p>
+          </div>
+
+          <div class="jinx-quote" style="margin: 30px 0;">
+            <p style="font-size: 1.2rem; line-height: 2;">
+              Hi te say,<br><br>
+              
+              Happy 23rd Birthday! 🎂✨<br><br>
+              
+              oa ra kaayo ko, pero since this is your first birthday with me ever since we met, I really want this to be memorable.
+Timan-an gyud nato ni nga year—2026, imong 23rd birthday hehe. 🩷
+
+This will serve as my end gift for today.
+Let me start with this: gikan sa atong pag-meet, you gave me this specific kind of energy nga ma-attract gyud ko sa imoha. Because of you, I discovered parts of myself—hidden traits and skills nga wala ko kahibaw nga naa diay.
+
+Na-meet pa gyud tika in the middle of my chaotic life… and somehow, you saved me from that chaos. You brought me back to life. You gave me hope and courage. Now that I finally have a purpose to live, you are a huge part of it.
+
+I’m wishing us both luck and a happy life ahead—especially ikaw. I hope masulbad na tanan nato nga problema, labi na sa kwarta. Kalami na lang unta mag-grocery nga wala na ga-lantaw sa presyo 😅
+
+Unsa pa—unta imong 23rd year dili na kaayo ka labad-labaron sa gagmayng butang. I hope nga mag-end na imong mga kasakit sa imong 22nd year, and this new year will be gentler to you.
+
+Gusto pud ko mangayo ug pasaylo, Ate. I know I made mistakes and I hurt your trust. But whatever happens, I won’t stop earning it—again and again.
+
+Chaotic pa man karon, pero I know this will all pass.
+Again, happy birthday, Ate Det. 🩷
+              <br><br>
+              
+              Here's to 23 years of being absolutely incredible, and to many more years of adventures, discoveries, and happiness ahead Ate!<br><br>
+              
+              <em style="color: #ff1493;">With all my love,<br>
+              nikki</em>
+            </p>
+          </div>
+
+          <div class="zodiac-symbol" style="font-size: 4rem; margin: 30px 0;">
+            ♒✨🌸💕🎮📚🍟🎬
+          </div>
+
+          <button class="btn" onclick="location.reload()">Play Again 🔄</button>
+        </div>
+      </div>
+
+      <!-- FOOTER - ALWAYS VISIBLE -->
+      <div class="footer">
+        <p>All rights reserved © 2026</p>
+        <p><span class="creator">imong ig agaw nga tomboy</span> (nik)</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // ═══ GAME STATE ═══
+    let completedQuests = new Set();
+    let currentScreen = 'screen-welcome';
+    let mangaSelected = 0;
+    let flavorSelected = 0;
+    let movieCorrect = 0;
+
+    // ═══ INITIALIZE ═══
+    function init() {
+      createStars();
+      createParticles();
+    }
+
+    function createStars() {
+      const constellation = document.getElementById('constellation');
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        constellation.appendChild(star);
+      }
+    }
+
+    function createParticles() {
+      const background = document.getElementById('background');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle-pink';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (Math.random() * 10 + 8) + 's';
+        particle.style.animationDelay = Math.random() * 5 + 's';
+        background.appendChild(particle);
+      }
+    }
+
+    function createConfetti() {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.background = ['#ff1493', '#ff69b4', '#000', '#fff'][Math.floor(Math.random() * 4)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        document.querySelector('.celebration').appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+
+    // ═══ NAVIGATION ═══
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      currentScreen = screenId;
+    }
+
+    function startGame() {
+      showScreen('screen-quests');
+    }
+
+    function startQuest(questName) {
+      showScreen('screen-' + questName);
+    }
+
+    function updateProgress() {
+      const count = completedQuests.size;
+      document.getElementById('questCount').textContent = count + '/7';
+      document.getElementById('progressFill').style.width = (count / 7 * 100) + '%';
+
+      if (count === 7) {
+        setTimeout(() => {
+          showScreen('screen-final');
+          createConfetti();
+          setInterval(createConfetti, 3000);
+        }, 1000);
+      }
+    }
+
+    function markQuestComplete(questId) {
+      if (!completedQuests.has(questId)) {
+        completedQuests.add(questId);
+        document.getElementById('quest-' + questId).classList.add('completed');
+        updateProgress();
+      }
+    }
+
+    // ═══ MANGA QUEST ═══
+    function selectManga(card) {
+      if (card.classList.contains('selected')) {
+        card.classList.remove('selected');
+        mangaSelected--;
+      } else if (mangaSelected < 3) {
+        card.classList.add('selected');
+        mangaSelected++;
+      }
+
+      if (mangaSelected === 3) {
+        document.getElementById('btn-manga').style.display = 'inline-block';
+      } else {
+        document.getElementById('btn-manga').style.display = 'none';
+      }
+    }
+
+    function completeManga() {
+      markQuestComplete('manga');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ JINX QUEST ═══
+    function completeJinx() {
+      markQuestComplete('jinx');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ FRIES QUEST ═══
+    function selectFlavor(btn, isCorrect) {
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      btn.parentElement.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      
+      if (isCorrect) flavorSelected++;
+      
+      if (flavorSelected === 2) {
+        document.getElementById('btn-fries').classList.remove('hidden');
+      }
+    }
+
+    function completeFries() {
+      markQuestComplete('fries');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ COLORS QUEST ═══
+    function completeColors() {
+      markQuestComplete('colors');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ LEARNING QUEST ═══
+    function completeLearning() {
+      markQuestComplete('learning');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ MOVIES QUEST ═══
+    function answerMovie(btn, isCorrect) {
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      btn.parentElement.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+      
+      if (isCorrect) movieCorrect++;
+      
+      if (movieCorrect === 2) {
+        document.getElementById('btn-movies').classList.remove('hidden');
+      }
+    }
+
+    function completeMovies() {
+      markQuestComplete('movies');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ CRIME QUEST ═══
+    function answerCrime(btn, isCorrect) {
+      if (isCorrect) {
+        btn.classList.add('correct');
+        document.getElementById('btn-crime').classList.remove('hidden');
+      } else {
+        btn.classList.add('wrong');
+      }
+      btn.parentElement.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    }
+
+    function completeCrime() {
+      markQuestComplete('crime');
+      setTimeout(() => showScreen('screen-quests'), 800);
+    }
+
+    // ═══ START ═══
+    window.addEventListener('load', init);
+  </script>
+
+</body>
+</html>
